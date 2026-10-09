@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questionário · Planejamento do Dia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Karla:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+  :root{
+    --bg:#FBF8F4; --surface:#FFFFFF; --ink:#3A2E28; --muted:#8B7A6D;
+    --accent:#A0616F; --accent-soft:#F5E8E8; --line:#E8DDD2; --gold:#B08D57; --gold-soft:#F3ECDF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Karla','Segoe UI',Arial,sans-serif; font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:720px; margin:0 auto; padding:40px 20px 80px;}
+  h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif; margin:0; }
+
+  header{text-align:center; margin-bottom:34px;}
+  .eyebrow{font-size:11px; font-weight:700; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-bottom:10px;}
+  header h1{font-size:42px; font-weight:500; line-height:1.1;}
+  header p{color:var(--muted); font-size:14px; max-width:48ch; margin:10px auto 0;}
+
+  .orn{display:flex; align-items:center; gap:14px; margin:38px 0 18px;}
+  .orn::before,.orn::after{content:""; flex:1; height:1px; background:var(--line);}
+  .orn span{font-family:'Cormorant Garamond',Georgia,serif; font-size:13px; font-weight:600; letter-spacing:.28em; text-transform:uppercase; color:var(--accent); white-space:nowrap;}
+
+  .card{background:var(--surface); border:1px solid var(--line); padding:20px 20px 16px; margin-bottom:14px;}
+  .card h3{font-size:22px; font-weight:600; color:var(--accent); margin-bottom:4px;}
+
+  label{display:block; font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:14px 0 5px;}
+  input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); background:var(--bg);
+    font-family:'Karla',sans-serif; font-size:15px; color:var(--ink); border-radius:4px;
+  }
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  textarea{resize:vertical; min-height:70px;}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:0 14px;}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:0 14px;}
+  @media (max-width:520px){ .row,.row3{grid-template-columns:1fr;} }
+
+  .radio-line{display:flex; gap:16px; flex-wrap:wrap; padding:4px 0;}
+  .radio-line label{display:flex; align-items:center; gap:6px; margin:0; font-size:14px; font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink); cursor:pointer;}
+  .radio-line input{accent-color:var(--accent); width:17px; height:17px;}
+
+  .hint{font-size:12px; color:var(--muted); margin-top:4px;}
+
+  button{font-family:'Karla',sans-serif; cursor:pointer; border:none; border-radius:4px; font-weight:700;}
+  .btn-add{background:var(--gold-soft); color:var(--gold); padding:10px 16px; font-size:13px; letter-spacing:.06em; margin:4px 0 18px;}
+  .btn-del{background:none; color:var(--accent); font-size:12px; padding:4px 8px; float:right; text-decoration:underline;}
+  .btn-main{
+    display:block; width:100%; background:var(--accent); color:#fff; font-size:17px;
+    padding:16px; letter-spacing:.06em; margin-top:30px; border-radius:6px;
+  }
+  .btn-main:hover{filter:brightness(.95);}
+  .btn-copy{background:var(--gold); color:#fff; padding:12px 20px; font-size:14px; margin-right:10px;}
+  .btn-zap{background:#25D366; color:#fff; padding:12px 20px; font-size:14px;}
+
+  #resultado{display:none; margin-top:34px;}
+  #prompt-out{
+    width:100%; min-height:320px; font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:12.5px; line-height:1.5; padding:14px; border:1px solid var(--gold);
+    background:var(--surface); border-radius:6px; color:var(--ink);
+  }
+  #copiado{color:var(--gold); font-weight:700; font-size:13px; margin-left:8px; visibility:hidden;}
+  .footer{text-align:center; color:var(--muted); font-size:12px; margin-top:50px;}
+</style>
+</head>
+<body>
+<noscript>
+  <div style="background:#F5E8E8;color:#A0616F;padding:16px 20px;font-family:Arial,sans-serif;font-size:15px;text-align:center;border-bottom:1px solid #E8DDD2">
+    <strong>O formulário não funciona nesta visualização.</strong><br>
+    Abra pelo link no Safari ou Chrome para conseguir adicionar noivas e gerar o texto.
+  </div>
+</noscript>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Studio · Planejamento do Dia</div>
+    <h1>Questionário do Cronograma</h1>
+    <p>Preencha as informações do dia. No final, o formulário gera um texto pronto — é só copiar e enviar, que o cronograma e os PDFs são montados a partir dele.</p>
+  </header>
+
+  <div class="orn"><span>1 · Dados Gerais</span></div>
+  <div class="card">
+    <div class="row">
+      <div><label>Data do atendimento</label><input type="date" id="g-data"></div>
+      <div><label>Horário de abertura (se souber)</label><input type="time" id="g-abertura"></div>
+    </div>
+  </div>
+
+  <div class="orn"><span>2 · Equipe do Dia</span></div>
+  <div class="card">
+    <label>Penteadistas (separe por vírgula)</label>
+    <input type="text" id="e-pent" placeholder="ex.: Jessica, Pamela, Cris">
+    <label>Maquiadoras (separe por vírgula)</label>
+    <input type="text" id="e-maq" placeholder="ex.: Letícia, Larissa, Brenda">
+    <label>Elaine faz a maquiagem das noivas?</label>
+    <div class="radio-line">
+      <label><input type="radio" name="e-elaine" value="sim" checked> Sim</label>
+      <label><input type="radio" name="e-elaine" value="não"> Não</label>
+    </div>
+    <div class="row">
+      <div><label>Apoio (coquetel / troca da noiva)</label><input type="text" id="e-apoio" value="Herminda"></div>
+      <div><label>Financeiro / administração</label><input type="text" id="e-fin" value="Franciele"></div>
+    </div>
+    <label>Alguma penteadista fixa para alguma noiva?</label>
+    <input type="text" id="e-fixa" placeholder="ex.: Jessica faz a noiva Isabel; Cris faz a Larissa e a Adriely">
+  </div>
+
+  <div class="orn"><span>3 · Noivas</span></div>
+  <div id="noivas"></div>
+  <button class="btn-add" onclick="addNoiva()">＋ Adicionar noiva</button>
+
+  <div class="orn"><span>4 · Clientes Avulsas</span></div>
+  <div id="avulsas"></div>
+  <button class="btn-add" onclick="addAvulsa()">＋ Adicionar avulsa</button>
+
+  <div class="orn"><span>5 · Debutante / Evento Especial</span></div>
+  <div class="card">
+    <label>Tem debutante ou outro evento especial?</label>
+    <div class="radio-line">
+      <label><input type="radio" name="d-tem" value="não" checked onchange="toggleDeb()"> Não</label>
+      <label><input type="radio" name="d-tem" value="sim" onchange="toggleDeb()"> Sim</label>
+    </div>
+    <div id="deb-campos" style="display:none">
+      <div class="row3">
+        <div><label>Início</label><input type="time" id="d-inicio"></div>
+        <div><label>Saída até</label><input type="time" id="d-saida"></div>
+        <div><label>Nº de acompanhantes</label><input type="number" id="d-acomp" min="0" value="0"></div>
+      </div>
+      <label>Detalhes (quem faz a make, serviços das acompanhantes…)</label>
+      <textarea id="d-obs" placeholder="ex.: make com a Elaine às 16h15; 3 acompanhantes de make e cabelo, saem juntas"></textarea>
+    </div>
+  </div>
+
+  <div class="orn"><span>6 · Observações Gerais</span></div>
+  <div class="card">
+    <label>Algo mais que precisa entrar no planejamento?</label>
+    <textarea id="g-obs" placeholder="ex.: penteadista de apoio das 11h às 15h; cliente X só pode de manhã…"></textarea>
+  </div>
+
+  <button class="btn-main" onclick="gerar()">✨ Gerar o texto para o Claude</button>
+
+  <div id="resultado">
+    <div class="orn"><span>Texto Pronto</span></div>
+    <p class="hint" style="margin-bottom:10px">Copie e cole na conversa do Claude — ou envie por WhatsApp para quem vai colar.</p>
+    <textarea id="prompt-out" readonly></textarea>
+    <div style="margin-top:12px">
+      <button class="btn-copy" onclick="copiar()">📋 Copiar texto</button>
+      <button class="btn-zap" onclick="zap()">Enviar por WhatsApp</button>
+      <span id="copiado">Copiado! ✓</span>
+    </div>
+  </div>
+
+  <div class="footer">Studio · as perguntas seguem o padrão do planejamento (making of ~2h antes da saída · make 1h · penteado 1h · make de noiva ~2h30)</div>
+</div>
+
+<script>
+var nNoiva = 0, nAvulsa = 0;
+
+function addNoiva(){
+  nNoiva++;
+  var d = document.createElement('div');
+  d.className = 'card noiva';
+  d.dataset.idx = nNoiva;
+  d.innerHTML =
+    '<button class="btn-del" onclick="this.parentNode.remove()">remover</button>' +
+    '<h3>Noiva ' + nNoiva + '</h3>' +
+    '<div class="row">' +
+      '<div><label>Nome da noiva</label><input type="text" class="n-nome"></div>' +
+      '<div><label>Horário de saída do studio</label><input type="time" class="n-saida"></div>' +
+    '</div>' +
+    '<div class="row">' +
+      '<div><label>Chegada (deixe vazio para calcular)</label><input type="time" class="n-chegada"></div>' +
+      '<div><label>Cor do roupão</label><input type="text" class="n-roupao" placeholder="ex.: rosé gold / a definir"></div>' +
+    '</div>' +
+    '<div class="row3">' +
+      '<div><label>Nº de madrinhas/convidadas</label><input type="number" class="n-qtd" min="0" value="0"></div>' +
+      '<div><label>Quantas fazem só make?</label><input type="number" class="n-somake" min="0" value="0"></div>' +
+      '<div><label>Quantas fazem só penteado?</label><input type="number" class="n-sopent" min="0" value="0"></div>' +
+    '</div>' +
+    '<label>Daminhas? (idades) / pessoas de idade</label>' +
+    '<input type="text" class="n-daminha" placeholder="ex.: 2 daminhas, 8 e 5 anos — ou deixe vazio">' +
+    '<label>Nomes das madrinhas já confirmadas (se tiver)</label>' +
+    '<input type="text" class="n-nomes" placeholder="ex.: Ana, Paula (só make), Tatiane">' +
+    '<label>Terá making of com as madrinhas (fotos de roupão)?</label>' +
+    '<div class="radio-line">' +
+      '<label><input type="radio" name="n-mk' + nNoiva + '" value="sim" checked> Sim (calcular ~2h antes da saída)</label>' +
+      '<label><input type="radio" name="n-mk' + nNoiva + '" value="não"> Não</label>' +
+    '</div>' +
+    '<label>A noiva faz a make antes ou depois do cabelo?</label>' +
+    '<div class="radio-line">' +
+      '<label><input type="radio" name="n-ordem' + nNoiva + '" value="padrão" checked> Tanto faz (encaixar na agenda da Elaine)</label>' +
+      '<label><input type="radio" name="n-ordem' + nNoiva + '" value="cabelo primeiro"> Cabelo primeiro</label>' +
+      '<label><input type="radio" name="n-ordem' + nNoiva + '" value="make primeiro"> Make primeiro</label>' +
+    '</div>' +
+    '<label>Reels, trend, first look ou surpresa para o pai?</label>' +
+    '<input type="text" class="n-extra" placeholder="ex.: first look com o pai — ou deixe vazio">' +
+    '<div class="row">' +
+      '<div><label>Vestido complexo de vestir?</label>' +
+      '<div class="radio-line">' +
+        '<label><input type="radio" name="n-vest' + nNoiva + '" value="não" checked> Não</label>' +
+        '<label><input type="radio" name="n-vest' + nNoiva + '" value="sim"> Sim</label>' +
+      '</div></div>' +
+      '<div><label>Lanche padrão (15 min)?</label>' +
+      '<div class="radio-line">' +
+        '<label><input type="radio" name="n-lanche' + nNoiva + '" value="sim" checked> Sim</label>' +
+        '<label><input type="radio" name="n-lanche' + nNoiva + '" value="não"> Não</label>' +
+      '</div></div>' +
+    '</div>' +
+    '<label>Observações desta noiva</label>' +
+    '<input type="text" class="n-obs" placeholder="ex.: madrinhas podem chegar cedo; tolerância até 17h30">';
+  document.getElementById('noivas').appendChild(d);
+}
+
+function addAvulsa(){
+  nAvulsa++;
+  var d = document.createElement('div');
+  d.className = 'card avulsa';
+  d.innerHTML =
+    '<button class="btn-del" onclick="this.parentNode.remove()">remover</button>' +
+    '<h3>Avulsa ' + nAvulsa + '</h3>' +
+    '<div class="row">' +
+      '<div><label>Nome</label><input type="text" class="a-nome"></div>' +
+      '<div><label>Serviços</label><input type="text" class="a-serv" placeholder="ex.: make e cabelo / só make / make e escova"></div>' +
+    '</div>' +
+    '<div class="row">' +
+      '<div><label>Chega às</label><input type="time" class="a-chega"></div>' +
+      '<div><label>Precisa sair até</label><input type="time" class="a-sai"></div>' +
+    '</div>' +
+    '<label>Preferência de profissional (se tiver)</label>' +
+    '<input type="text" class="a-pref" placeholder="ex.: make com a Letícia e cabelo com a Jessica">';
+  document.getElementById('avulsas').appendChild(d);
+}
+
+function toggleDeb(){
+  var sim = document.querySelector('input[name="d-tem"]:checked').value === 'sim';
+  document.getElementById('deb-campos').style.display = sim ? 'block' : 'none';
+}
+
+function v(el, sel){ var e = el.querySelector(sel); return e && e.value ? e.value.trim() : ''; }
+function rad(name){ var e = document.querySelector('input[name="' + name + '"]:checked'); return e ? e.value : ''; }
+function fmtData(iso){ if(!iso) return '(a definir)'; var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+function ou(x, alt){ return x ? x : alt; }
+
+function gerar(){
+  var L = [];
+  L.push('Monte o planejamento de um dia do studio de noivas seguindo o nosso padrão:');
+  L.push('1) primeiro a ESCALA GERAL para aprovação (tabela por cliente + carga por profissional, sem deixar funcionárias nem clientes paradas, chegadas casadas com as cadeiras);');
+  L.push('2) depois de aprovada, os PDFs individuais por noiva no layout padrão do studio (rosé/dourado, grupos com vagas numeradas em branco, SEM nomes das profissionais) e a escala interna da equipe (com os nomes).');
+  L.push('Padrões: make 1h · penteado 1h · make de noiva ~2h30 (Elaine) · making of 30–40 min, ~2h antes da saída · lanche da noiva 15 min · daminhas produzidas perto do making of · atraso +5min vira encaixe.');
+  L.push('');
+  L.push('=== DADOS DO DIA ===');
+  L.push('Data: ' + fmtData(document.getElementById('g-data').value));
+  var ab = document.getElementById('g-abertura').value;
+  if(ab) L.push('Abertura do studio: ' + ab);
+  L.push('');
+  L.push('=== EQUIPE ===');
+  L.push('Penteadistas: ' + ou(document.getElementById('e-pent').value.trim(), '(informar)'));
+  L.push('Maquiadoras: ' + ou(document.getElementById('e-maq').value.trim(), '(informar)'));
+  L.push('Elaine faz as makes das noivas: ' + rad('e-elaine'));
+  L.push('Apoio (coquetel/troca): ' + ou(document.getElementById('e-apoio').value.trim(), '—'));
+  L.push('Financeiro/administração: ' + ou(document.getElementById('e-fin').value.trim(), '—'));
+  var fixa = document.getElementById('e-fixa').value.trim();
+  if(fixa) L.push('Profissionais fixas: ' + fixa);
+  L.push('');
+
+  var noivas = document.querySelectorAll('.noiva');
+  if(noivas.length === 0){ L.push('=== NOIVAS === (nenhuma informada)'); }
+  noivas.forEach(function(n, i){
+    var k = n.dataset.idx;
+    L.push('=== NOIVA ' + (i+1) + ': ' + ou(v(n,'.n-nome'),'(sem nome)').toUpperCase() + ' ===');
+    L.push('Saída do studio: ' + ou(v(n,'.n-saida'),'(informar)'));
+    L.push('Chegada: ' + ou(v(n,'.n-chegada'),'calcular a partir da saída'));
+    L.push('Roupão: ' + ou(v(n,'.n-roupao'),'a definir'));
+    L.push('Madrinhas/convidadas: ' + v(n,'.n-qtd') + ' (só make: ' + v(n,'.n-somake') + ' · só penteado: ' + v(n,'.n-sopent') + ' · restante make e penteado)');
+    var dam = v(n,'.n-daminha'); if(dam) L.push('Daminhas/idosas: ' + dam);
+    var nomes = v(n,'.n-nomes'); if(nomes) L.push('Nomes confirmados: ' + nomes);
+    L.push('Making of com as madrinhas: ' + rad('n-mk' + k));
+    L.push('Ordem da noiva: ' + rad('n-ordem' + k));
+    L.push('Reels/first look/surpresa: ' + ou(v(n,'.n-extra'),'não'));
+    L.push('Vestido complexo: ' + rad('n-vest' + k) + ' · Lanche padrão 15min: ' + rad('n-lanche' + k));
+    var ob = v(n,'.n-obs'); if(ob) L.push('Obs.: ' + ob);
+    L.push('');
+  });
+
+  var avs = document.querySelectorAll('.avulsa');
+  if(avs.length){
+    L.push('=== CLIENTES AVULSAS ===');
+    avs.forEach(function(a){
+      L.push('- ' + ou(v(a,'.a-nome'),'(sem nome)') + ' — ' + ou(v(a,'.a-serv'),'serviços a informar') +
+        ' — chega ' + ou(v(a,'.a-chega'),'?') + ' — sai até ' + ou(v(a,'.a-sai'),'?') +
+        (v(a,'.a-pref') ? ' — preferência: ' + v(a,'.a-pref') : ''));
+    });
+    L.push('');
+  }
+
+  if(rad('d-tem') === 'sim'){
+    L.push('=== DEBUTANTE / EVENTO ESPECIAL ===');
+    L.push('Início: ' + ou(document.getElementById('d-inicio').value,'?') + ' · Saída até: ' + ou(document.getElementById('d-saida').value,'?') + ' · Acompanhantes: ' + document.getElementById('d-acomp').value);
+    var dob = document.getElementById('d-obs').value.trim(); if(dob) L.push('Detalhes: ' + dob);
+    L.push('');
+  }
+
+  var gobs = document.getElementById('g-obs').value.trim();
+  if(gobs){ L.push('=== OBSERVAÇÕES GERAIS ==='); L.push(gobs); L.push(''); }
+
+  L.push('Comece gerando a escala geral para eu validar. Aponte conflitos de cadeira, esperas e quem fica semi-pronta, se houver.');
+
+  var out = document.getElementById('prompt-out');
+  out.value = L.join('\n');
+  document.getElementById('resultado').style.display = 'block';
+  out.style.height = 'auto';
+  out.style.height = (out.scrollHeight + 10) + 'px';
+  out.scrollIntoView({behavior:'smooth'});
+}
+
+function copiar(){
+  var out = document.getElementById('prompt-out');
+  out.select(); out.setSelectionRange(0, 999999);
+  try{ navigator.clipboard.writeText(out.value); }catch(e){ document.execCommand('copy'); }
+  var ok = document.getElementById('copiado');
+  ok.style.visibility = 'visible';
+  setTimeout(function(){ ok.style.visibility = 'hidden'; }, 2500);
+}
+
+function zap(){
+  var t = document.getElementById('prompt-out').value;
+  window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+}
+
+addNoiva();
+</script>
+</body>
+</html>
