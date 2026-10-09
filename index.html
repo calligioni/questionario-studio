@@ -157,7 +157,7 @@
     </div>
   </div>
 
-  <div class="footer">Studio · as perguntas seguem o padrão do planejamento (making of ~2h antes da saída · make 1h · penteado 1h · make de noiva ~2h30)</div>
+  <div class="footer">Studio · as perguntas seguem o padrão do planejamento (madrinhas: make 1h · penteado 1h · noiva: make ~2h30 · cabelo 40 min de preparação + 1h20 de finalização)</div>
 </div>
 
 <script>
@@ -175,15 +175,17 @@ function addNoiva(){
       '<div><label>Nome da noiva</label><input type="text" class="n-nome"></div>' +
       '<div><label>Horário de saída do studio</label><input type="time" class="n-saida"></div>' +
     '</div>' +
-    '<div class="row">' +
-      '<div><label>Chegada (deixe vazio para calcular)</label><input type="time" class="n-chegada"></div>' +
+    '<div class="row3">' +
+      '<div><label>Chegada (vazio = calcular)</label><input type="time" class="n-chegada"></div>' +
       '<div><label>Cor do roupão</label><input type="text" class="n-roupao" placeholder="ex.: rosé gold / a definir"></div>' +
+      '<div><label>Sala da noiva</label><input type="text" class="n-sala" placeholder="ex.: Sala 1 / Sala Rosa"></div>' +
     '</div>' +
     '<div class="row3">' +
       '<div><label>Nº de madrinhas/convidadas</label><input type="number" class="n-qtd" min="0" value="0"></div>' +
-      '<div><label>Quantas fazem só make?</label><input type="number" class="n-somake" min="0" value="0"></div>' +
-      '<div><label>Quantas fazem só penteado?</label><input type="number" class="n-sopent" min="0" value="0"></div>' +
+      '<div><label>Dessas, quantas fazem SÓ make?</label><input type="number" class="n-somake" min="0" value="0"></div>' +
+      '<div><label>Dessas, quantas fazem SÓ penteado?</label><input type="number" class="n-sopent" min="0" value="0"></div>' +
     '</div>' +
+    '<div class="hint">Ex.: 12 madrinhas, 2 só make e 0 só penteado = 10 fazem make e penteado. Se todas fazem os dois, deixe 0 e 0.</div>' +
     '<label>Daminhas? (idades) / pessoas de idade</label>' +
     '<input type="text" class="n-daminha" placeholder="ex.: 2 daminhas, 8 e 5 anos — ou deixe vazio">' +
     '<label>Nomes das madrinhas já confirmadas (se tiver)</label>' +
@@ -213,6 +215,16 @@ function addNoiva(){
         '<label><input type="radio" name="n-lanche' + nNoiva + '" value="não"> Não</label>' +
       '</div></div>' +
     '</div>' +
+    '<div class="row3">' +
+      '<div><label>Preparação do cabelo (min)</label><input type="number" class="n-prep" min="0" step="5" value="40"></div>' +
+      '<div><label>Finalização do penteado (min)</label><input type="number" class="n-final" min="0" step="5" value="80"></div>' +
+      '<div><label>Fez teste de cabelo?</label>' +
+      '<div class="radio-line">' +
+        '<label><input type="radio" name="n-teste' + nNoiva + '" value="sim" checked> Sim</label>' +
+        '<label><input type="radio" name="n-teste' + nNoiva + '" value="não"> Não</label>' +
+      '</div></div>' +
+    '</div>' +
+    '<div class="hint">Padrão: 40 min de preparação + 1h20 de finalização. Sem teste de cabelo, vale aumentar (ex.: 1h30 de finalização).</div>' +
     '<label>Observações desta noiva</label>' +
     '<input type="text" class="n-obs" placeholder="ex.: madrinhas podem chegar cedo; tolerância até 17h30">';
   document.getElementById('noivas').appendChild(d);
@@ -253,7 +265,8 @@ function gerar(){
   L.push('Monte o planejamento de um dia do studio de noivas seguindo o nosso padrão:');
   L.push('1) primeiro a ESCALA GERAL para aprovação (tabela por cliente + carga por profissional, sem deixar funcionárias nem clientes paradas, chegadas casadas com as cadeiras);');
   L.push('2) depois de aprovada, os PDFs individuais por noiva no layout padrão do studio (rosé/dourado, grupos com vagas numeradas em branco, SEM nomes das profissionais) e a escala interna da equipe (com os nomes).');
-  L.push('Padrões: make 1h · penteado 1h · make de noiva ~2h30 (Elaine) · making of 30–40 min, ~2h antes da saída · lanche da noiva 15 min · daminhas produzidas perto do making of · atraso +5min vira encaixe.');
+  L.push('Padrões: madrinhas: make 1h e penteado 1h · noiva: make ~2h30 (Elaine) + cabelo em 2 etapas — preparação 40 min (antes do making of) e finalização 1h20 (depois do making of, incluindo troca do vestido e fotos) — salvo tempos diferentes informados abaixo · making of 30–40 min · lanche da noiva 15 min · daminhas produzidas perto do making of · atraso +5min vira encaixe.');
+  L.push('Regras: todas as madrinhas prontas antes ou no máximo no horário de saída da sua noiva · nenhuma funcionária nem cliente parada · grupos de chegada casados com as cadeiras livres · preferências de profissional não mudam · noivas na mesma sala não podem ter horários sobrepostos (a próxima só chega depois que a anterior sair) · informar a sala de cada noiva nos PDFs.');
   L.push('');
   L.push('=== DADOS DO DIA ===');
   L.push('Data: ' + fmtData(document.getElementById('g-data').value));
@@ -278,6 +291,7 @@ function gerar(){
     L.push('Saída do studio: ' + ou(v(n,'.n-saida'),'(informar)'));
     L.push('Chegada: ' + ou(v(n,'.n-chegada'),'calcular a partir da saída'));
     L.push('Roupão: ' + ou(v(n,'.n-roupao'),'a definir'));
+    L.push('Sala da noiva: ' + ou(v(n,'.n-sala'),'a definir'));
     L.push('Madrinhas/convidadas: ' + v(n,'.n-qtd') + ' (só make: ' + v(n,'.n-somake') + ' · só penteado: ' + v(n,'.n-sopent') + ' · restante make e penteado)');
     var dam = v(n,'.n-daminha'); if(dam) L.push('Daminhas/idosas: ' + dam);
     var nomes = v(n,'.n-nomes'); if(nomes) L.push('Nomes confirmados: ' + nomes);
@@ -285,6 +299,9 @@ function gerar(){
     L.push('Ordem da noiva: ' + rad('n-ordem' + k));
     L.push('Reels/first look/surpresa: ' + ou(v(n,'.n-extra'),'não'));
     L.push('Vestido complexo: ' + rad('n-vest' + k) + ' · Lanche padrão 15min: ' + rad('n-lanche' + k));
+    var fmt = function(m){ m = parseInt(m, 10) || 0; var h = Math.floor(m / 60), r = m % 60; return (h ? h + 'h' : '') + (r ? (h ? (r < 10 ? '0' : '') + r : r + ' min') : (h ? '' : '0 min')); };
+    L.push('Cabelo da noiva: preparação ' + fmt(v(n,'.n-prep') || 40) + ' + finalização ' + fmt(v(n,'.n-final') || 80) +
+      ' · fez teste de cabelo: ' + rad('n-teste' + k) + (rad('n-teste' + k) === 'não' ? ' (reservar tempo extra)' : ''));
     var ob = v(n,'.n-obs'); if(ob) L.push('Obs.: ' + ob);
     L.push('');
   });
