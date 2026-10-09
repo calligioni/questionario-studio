@@ -48,6 +48,7 @@
   .radio-line input{accent-color:var(--accent); width:17px; height:17px;}
 
   .hint{font-size:12px; color:var(--muted); margin-top:4px;}
+  .pill{display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); background:var(--gold-soft); padding:2px 9px; border-radius:3px;}
 
   button{font-family:'Karla',sans-serif; cursor:pointer; border:none; border-radius:4px; font-weight:700;}
   .btn-add{background:var(--gold-soft); color:var(--gold); padding:10px 16px; font-size:13px; letter-spacing:.06em; margin:4px 0 18px;}
@@ -83,6 +84,7 @@
     <div class="eyebrow">Studio · Planejamento do Dia</div>
     <h1>Questionário do Cronograma</h1>
     <p>Preencha as informações do dia. No final, o formulário gera um texto pronto — é só copiar e enviar, que o cronograma e os PDFs são montados a partir dele.</p>
+    <p style="margin-top:14px"><span class="pill">Regra</span> Todas as madrinhas ficam prontas antes ou, no máximo, no mesmo horário da saída da noiva.</p>
   </header>
 
   <div class="orn"><span>1 · Dados Gerais</span></div>
@@ -266,7 +268,8 @@ function gerar(){
   L.push('1) primeiro a ESCALA GERAL para aprovação (tabela por cliente + carga por profissional, sem deixar funcionárias nem clientes paradas, chegadas casadas com as cadeiras);');
   L.push('2) depois de aprovada, os PDFs individuais por noiva no layout padrão do studio (rosé/dourado, grupos com vagas numeradas em branco, SEM nomes das profissionais) e a escala interna da equipe (com os nomes).');
   L.push('Padrões: madrinhas: make 1h e penteado 1h · noiva: make ~2h30 (Elaine) + cabelo em 2 etapas — preparação 40 min (antes do making of) e finalização 1h20 (depois do making of, incluindo troca do vestido e fotos) — salvo tempos diferentes informados abaixo · making of 30–40 min · lanche da noiva 15 min · daminhas produzidas perto do making of · atraso +5min vira encaixe.');
-  L.push('Regras: todas as madrinhas prontas antes ou no máximo no horário de saída da sua noiva · nenhuma funcionária nem cliente parada · grupos de chegada casados com as cadeiras livres · preferências de profissional não mudam · noivas na mesma sala não podem ter horários sobrepostos (a próxima só chega depois que a anterior sair) · informar a sala de cada noiva nos PDFs.');
+  L.push('REGRA OBRIGATÓRIA: todas as madrinhas, convidadas e daminhas de cada noiva precisam estar PRONTAS ANTES ou, no máximo, NO MESMO HORÁRIO da saída da sua noiva. Nenhuma pode terminar depois da noiva sair.');
+  L.push('Demais regras: nenhuma funcionária nem cliente parada · grupos de chegada casados com as cadeiras livres · preferências de profissional não mudam · noivas na mesma sala não podem ter horários sobrepostos (a próxima só chega depois que a anterior sair) · informar a sala de cada noiva nos PDFs.');
   L.push('');
   L.push('=== DADOS DO DIA ===');
   L.push('Data: ' + fmtData(document.getElementById('g-data').value));
